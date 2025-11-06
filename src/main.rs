@@ -7,8 +7,11 @@ use ratatui::{
     widgets::{Block, Paragraph},
 };
 
+mod git;
+
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
+    git::get_repo();
     let terminal = ratatui::init();
     let result = App::new().run(terminal);
     ratatui::restore();
