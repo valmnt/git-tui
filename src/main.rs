@@ -2,5 +2,9 @@ mod git;
 
 fn main() {
     let mut git = git::Git::new();
-    git.get_branches();
+    let branches = git.get_branches();
+
+    for branch in branches {
+        git.get_commits_branch(&branch);
+    }
 }
