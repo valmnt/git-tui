@@ -32,7 +32,10 @@ fn process() {
     let branches = git.get_branches();
 
     for branch in branches {
-        git.get_commits(&branch);
+        let commits = git.get_commits(&branch);
+        for commit in commits {
+            println!("{commit}");
+        }
     }
 }
 

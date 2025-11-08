@@ -33,7 +33,7 @@ impl Git {
         return names;
     }
 
-    pub fn get_commits(&mut self, branch_name: &str) {
+    pub fn get_commits(&mut self, branch_name: &str) -> Vec<String> {
         let branch = format!("refs/heads/{}", branch_name);
         let oid: git2::Oid = match self.repo.revparse_single(&branch) {
             Ok(obj) => obj.id(),
@@ -48,6 +48,8 @@ impl Git {
         let _ = walk.push(oid);
         let _ = walk.set_sorting(git2::Sort::TIME);
 
+        let mut messages: Vec<String> = Vec::new();
+
         for result in walk {
             if let Ok(oid) = result {
                 let commit = match self.repo.find_commit(oid) {
@@ -55,9 +57,11 @@ impl Git {
                     Err(e) => panic!("failed to find a commit: {e}"),
                 };
 
-                let message = commit.message().unwrap_or("no message");
-                println!("{message}");
+                let message = commit.message().unwrap_or("no message").to_string();
+                messages.push(message);
             }
         }
+
+        return messages;
     }
 }
