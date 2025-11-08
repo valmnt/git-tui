@@ -13,15 +13,6 @@ fn main() {
     run(terminal);
 }
 
-fn process() {
-    let mut git = git::Git::new();
-    let branches = git.get_branches();
-
-    for branch in branches {
-        git.get_commits_branch(&branch);
-    }
-}
-
 fn run(mut terminal: DefaultTerminal) {
     loop {
         let _ = terminal.draw(draw);
@@ -34,6 +25,15 @@ fn run(mut terminal: DefaultTerminal) {
 fn draw(frame: &mut Frame) {
     let greeting = Paragraph::new("Hello World! (press 'q' to quit)");
     frame.render_widget(greeting, frame.area());
+}
+
+fn process() {
+    let mut git = git::Git::new();
+    let branches = git.get_branches();
+
+    for branch in branches {
+        git.get_commits(&branch);
+    }
 }
 
 fn exit() -> bool {

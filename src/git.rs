@@ -33,7 +33,7 @@ impl Git {
         return names;
     }
 
-    pub fn get_commits_branch(&mut self, branch_name: &str) {
+    pub fn get_commits(&mut self, branch_name: &str) {
         let branch = format!("refs/heads/{}", branch_name);
         let oid: git2::Oid = match self.repo.revparse_single(&branch) {
             Ok(obj) => obj.id(),
