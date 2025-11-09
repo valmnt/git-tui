@@ -1,6 +1,6 @@
 use git2::{self, BranchType, Repository};
 
-const DEFAULT_COMMIT_LIMIT: usize = 20;
+const DEFAULT_COMMIT_LIMIT: usize = 1000;
 
 pub struct CommitInfo {
     pub short_id: String,
@@ -37,7 +37,7 @@ impl Git {
             }
         }
 
-        return names;
+        names
     }
 
     pub fn get_commits(&mut self, branch_name: &str) -> Vec<CommitInfo> {
@@ -83,7 +83,7 @@ impl Git {
             }
         }
 
-        return commits;
+        commits
     }
 
     pub fn build_tree_lines(&mut self) -> Vec<String> {
@@ -117,6 +117,6 @@ impl Git {
             }
         }
 
-        return lines;
+        lines
     }
 }
