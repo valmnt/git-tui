@@ -8,35 +8,41 @@ use ratatui::{
 mod git;
 
 fn main() {
-    process();
+    let app = App::new();
     let terminal = ratatui::init();
-    run(terminal);
+    run(terminal, app);
 }
 
-fn run(mut terminal: DefaultTerminal) {
+struct App {
+    tree_lines: Vec<String>,
+}
+
+impl App {
+    fn new() -> Self {
+        let mut git = git::Git::new();
+        let tree_lines = git.build_tree_lines();
+        Self { tree_lines }
+    }
+}
+
+fn run(mut terminal: DefaultTerminal, app: App) {
     loop {
-        let _ = terminal.draw(draw);
+        let _ = terminal.draw(|frame| draw(frame, &app));
         if exit() {
             break;
         }
     }
 }
 
-fn draw(frame: &mut Frame) {
-    let greeting = Paragraph::new("Hello World! (press 'q' to quit)");
-    frame.render_widget(greeting, frame.area());
-}
+fn draw(frame: &mut Frame, app: &App) {
+    let content = if app.tree_lines.is_empty() {
+        "No git data available".to_string()
+    } else {
+        app.tree_lines.join("\n")
+    };
 
-fn process() {
-    let mut git = git::Git::new();
-    let branches = git.get_branches();
-
-    for branch in branches {
-        let commits = git.get_commits(&branch);
-        for commit in commits {
-            println!("{commit}");
-        }
-    }
+    let paragraph = Paragraph::new(content);
+    frame.render_widget(paragraph, frame.area());
 }
 
 fn exit() -> bool {
